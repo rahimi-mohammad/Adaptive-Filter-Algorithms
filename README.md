@@ -2,8 +2,8 @@
  Four different adaptive filters were implemented and compared. LMS (Least Mean Squares) and NLMS (Normalized Least Mean Squares) are adaptive filter algorithms used for signal processing and system identification. 
 
 
- ![alt text](https://en.wikipedia.org/wiki/File:Lms_filter.svg)
-
+ ![alt text](https://en.wikipedia.org/wiki/Least_mean_squares_filter#/media/File:Lms_filter.svg)
+ 
 - **LMS (Least Mean Squares):** 
   - LMS is a gradient-based adaptive algorithm used to minimize the mean square error between the desired output and the actual output of a system.
   - It updates the filter coefficients iteratively by adjusting them in the direction that minimizes the error between the estimated output and the desired output.
