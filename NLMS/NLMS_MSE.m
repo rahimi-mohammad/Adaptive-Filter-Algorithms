@@ -1,29 +1,43 @@
+% Compare the effect of the number of coefficients on NLMS algorithm
+
 clc
 close all
-n1=2;                    % number of coefficients
-n2=3;                    % number of coefficients
-K=200;                   % number of trials
-mu=0.1;
-n_iterations=100;
-e1=zeros(K,n_iterations);
-e2=zeros(K,n_iterations);
 
-for k=1:K
- u=randn(1,n_iterations);
- d=convolv(u,[0.81 1.8 1]);
+% Parameters
+n1 = 2;               % Number of coefficients for the first case
+n2 = 3;               % Number of coefficients for the second case
+K = 200;              % Number of trials
+mu = 0.1;             % Step size
+n_iterations = 100;   % Number of iterations per trial
 
- [d_hat1, w1]=myNLMS(d,u,n1,mu);
- [d_hat2, w2]=myNLMS(d,u,n2,1);
- 
- e1(k,:)=(d_hat1-d).*(d_hat1-d);
- e2(k,:)=(d_hat2-d).*(d_hat2-d);
+% Initialize arrays to store mean square errors (MSEs)
+e1 = zeros(K, n_iterations);
+e2 = zeros(K, n_iterations);
+
+% Perform trials
+for k = 1:K
+    % Generate random input signal
+    u = randn(1, n_iterations);
+    
+    % Generate desired signal corrupted by noise
+    d = convolv(u, [0.81 1.8 1]);
+    
+    % Apply NLMS algorithm with n1 coefficients
+    [d_hat1, ~] = myNLMS(d, u, n1, mu);
+    
+    % Apply NLMS algorithm with n2 coefficients
+    [d_hat2, ~] = myNLMS(d, u, n2, 1);
+    
+    % Calculate MSE for each trial
+    e1(k, :) = (d_hat1 - d) .^ 2;
+    e2(k, :) = (d_hat2 - d) .^ 2;
 end
 
-plot(1:n_iterations,sum(e1)/K , 'r')       
+% Plot the results
+plot(1:n_iterations, sum(e1) / K, 'r')       
 hold on
-plot(1:n_iterations,sum(e2)/K , 'b')       
+plot(1:n_iterations, sum(e2) / K, 'b')       
 title('The Effect of the Number of Coefficients')
 ylabel('MSE')
-xlabel('NO. OF ITERATIONS')
-legend('2 coefficients','3 coefficients')
-
+xlabel('Number of Iterations')
+legend('2 coefficients', '3 coefficients')

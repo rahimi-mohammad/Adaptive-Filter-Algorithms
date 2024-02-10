@@ -1,25 +1,34 @@
-clc
-close all
-n=4;                    % number of coefficients
-K=200;                   % number of trials
-mu=0.1;
-e1=zeros(K,100);
-e2=zeros(K,100);
+n = 4;         % Number of coefficients
+K = 200;       % Number of trials
+mu = 0.1;      % Step size parameter
 
-for k=1:K
- u=randn(1,100);
- d=convolv(u,[0.81 1.8 1]);
- 
- [d_hat1, w1]=myLMS(d,u,n,mu);
- [d_hat2, w2]=myNLMS(d,u,n,1);
- e1(k,:)=(d_hat1-d).*(d_hat1-d);
- e2(k,:)=(d_hat2-d).*(d_hat2-d);
+% Initialize arrays to store mean square error (MSE)
+e1 = zeros(K, 100);
+e2 = zeros(K, 100);
 
+% Perform multiple trials
+for k = 1:K
+    % Generate input signal
+    u = randn(1, 100);
+    
+    % Convolve input signal with filter coefficients
+    d = convolv(u, [0.81, 1.8, 1]);
+    
+    % Apply LMS algorithm
+    [d_hat1, w1] = myLMS(d, u, n, mu);
+    
+    % Apply NLMS algorithm
+    [d_hat2, w2] = myNLMS(d, u, n, 1);
+    
+    % Compute mean square error (MSE)
+    e1(k, :) = (d_hat1 - d) .* (d_hat1 - d);
+    e2(k, :) = (d_hat2 - d) .* (d_hat2 - d);
 end
 
-plot(1:100,sum(e1)/K , 'r')       % excess mean square error is zero and for mu=0.3 it takes about 53 iterations to fall to 10% of error peak
+% Plot the MSE for each iteration
+plot(1:100, sum(e1) / K, 'r')  % Plot LMS MSE
 hold on
-plot(1:100,sum(e2)/K , 'b')       % excess mean square error is zero and it takes about 18 iterations to fall to 10% of error peak
+plot(1:100, sum(e2) / K, 'b')  % Plot NLMS MSE
 ylabel('MSE')
-xlabel('NO. OF ITERATIONS')
-legend('LMS','NLMS')
+xlabel('Number of Iterations')
+legend('LMS', 'NLMS')
